@@ -355,12 +355,8 @@ kotlin {
         }
     }
     
-    val iosTargets = listOf(
-        iosArm64(),
-        iosSimulatorArm64()
-    )
-
-    iosTargets.forEach { iosTarget ->
+    // iOS targets removed: this fork ships Android and Android TV only.
+    emptyList<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget>().forEach { iosTarget ->
         val nuvioEngineSlice = if (iosTarget.name == "iosArm64") {
             "ios-arm64"
         } else {

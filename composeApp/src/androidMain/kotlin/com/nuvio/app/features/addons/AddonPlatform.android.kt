@@ -105,7 +105,9 @@ internal object AddonHttpClientProvider {
 private fun buildAddonHttpClient(cache: Cache? = null): OkHttpClient =
     OkHttpClient.Builder()
         .dns(IPv4FirstDns())
-        .connectTimeout(60, TimeUnit.SECONDS)
+        // A server that does not accept a connection within 15 s is down; waiting 60 s only keeps
+        // the loading spinner up. Read timeout stays long for slow scrapers and debrid lookups.
+        .connectTimeout(15, TimeUnit.SECONDS)
         .readTimeout(60, TimeUnit.SECONDS)
         .writeTimeout(60, TimeUnit.SECONDS)
         .followRedirects(true)
@@ -203,15 +205,28 @@ private suspend fun executeTextRequest(
         builder.method(normalizedMethod, null)
     }.build()
 
-    AddonHttpClientProvider.get().newCall(request).execute().use { response ->
-        val payload = readResponseBody(response.body)
-        if (!response.isSuccessful) {
-            error(runBlocking { getString(Res.string.network_request_failed_http, response.code) })
+    // Cancel the network call when the coroutine is cancelled (e.g. the user typed a new search
+    // query or left the streams screen). Without this, abandoned requests keep running for up to
+    // the full timeout and compete with the new ones for connections and bandwidth.
+    val call = AddonHttpClientProvider.get().newCall(request)
+    val cancelHandle = coroutineContext[Job]?.invokeOnCompletion { cause ->
+        if (cause is CancellationException) {
+            call.cancel()
         }
-        if (payload.isBlank()) {
-            throw IllegalStateException(runBlocking { getString(Res.string.network_empty_response_body) })
+    }
+    try {
+        call.execute().use { response ->
+            val payload = readResponseBody(response.body)
+            if (!response.isSuccessful) {
+                error(runBlocking { getString(Res.string.network_request_failed_http, response.code) })
+            }
+            if (payload.isBlank()) {
+                throw IllegalStateException(runBlocking { getString(Res.string.network_empty_response_body) })
+            }
+            payload
         }
-        payload
+    } finally {
+        cancelHandle?.dispose()
     }
 }
 

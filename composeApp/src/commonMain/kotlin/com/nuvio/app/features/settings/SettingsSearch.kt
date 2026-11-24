@@ -200,13 +200,7 @@ internal fun settingsSearchEntries(
         description = stringResource(Res.string.compose_settings_root_account_description),
         category = accountCategory,
     )
-    addPage(
-        page = SettingsPage.TraktAuthentication,
-        key = "tracking",
-        title = trackingPage,
-        description = stringResource(Res.string.compose_settings_root_tracking_description),
-        category = accountCategory,
-    )
+    // Tracking page (Trakt / Simkl) hidden from search: unused in this fork.
     addPage(
         page = SettingsPage.Appearance,
         key = "appearance",
@@ -934,24 +928,7 @@ internal fun settingsSearchEntries(
         section = stringResource(Res.string.settings_notifications_section_test),
     )
 
-    addRow(
-        page = SettingsPage.TraktAuthentication,
-        key = "trakt-authentication",
-        title = stringResource(Res.string.trakt_library_source_trakt),
-        description = stringResource(Res.string.settings_trakt_intro_description),
-        pageLabel = trackingPage,
-        section = stringResource(Res.string.settings_tracking_services),
-        category = accountCategory,
-    )
-    addRow(
-        page = SettingsPage.TraktAuthentication,
-        key = "simkl-authentication",
-        title = stringResource(Res.string.tracking_source_simkl),
-        description = stringResource(Res.string.settings_simkl_sign_in_description),
-        pageLabel = trackingPage,
-        section = stringResource(Res.string.settings_tracking_services),
-        category = accountCategory,
-    )
+    // Trakt and Simkl sign-in rows hidden from search: unused in this fork.
     addRow(
         page = SettingsPage.TraktAuthentication,
         key = "mdblist-authentication",
@@ -961,23 +938,7 @@ internal fun settingsSearchEntries(
         section = stringResource(Res.string.settings_tracking_services),
         category = accountCategory,
     )
-    listOf(
-        PlaybackSearchRow("trakt-library-source", stringResource(Res.string.trakt_library_source_title), stringResource(Res.string.trakt_library_source_subtitle)),
-        PlaybackSearchRow("trakt-watch-progress", stringResource(Res.string.trakt_watch_progress_title), stringResource(Res.string.trakt_watch_progress_subtitle)),
-        PlaybackSearchRow("trakt-continue-watching-window", stringResource(Res.string.trakt_continue_watching_window), stringResource(Res.string.trakt_continue_watching_subtitle)),
-        PlaybackSearchRow("trakt-comments", stringResource(Res.string.settings_trakt_comments), stringResource(Res.string.settings_trakt_comments_description)),
-        PlaybackSearchRow("trakt-more-like-this-source", stringResource(Res.string.trakt_more_like_this_source_title), stringResource(Res.string.trakt_more_like_this_source_subtitle)),
-    ).forEach { row ->
-        addRow(
-            page = SettingsPage.TraktAuthentication,
-            key = row.key,
-            title = row.title,
-            description = row.description,
-            pageLabel = trackingPage,
-            section = stringResource(Res.string.settings_tracking_features),
-            category = accountCategory,
-        )
-    }
+    // Trakt feature rows hidden from search: unused in this fork.
 
     return entries
 }

@@ -37,16 +37,7 @@ internal fun LazyListScope.settingsRootContent(
                                 onClick = onSwitchProfileClick,
                             )
                         }
-                        if (onWatchPartyClick != null) {
-                            SettingsGroupDivider(isTablet = isTablet)
-                            SettingsNavigationRow(
-                                title = stringResource(Res.string.party_title),
-                                description = stringResource(Res.string.party_settings_description),
-                                icon = Icons.Rounded.Groups,
-                                isTablet = isTablet,
-                                onClick = onWatchPartyClick,
-                            )
-                        }
+                        // Watch party row removed: unused in this fork.
                     }
                     SettingsCategory.Look -> {
                         SettingsPageRow(
@@ -85,13 +76,7 @@ internal fun LazyListScope.settingsRootContent(
                             isTablet = isTablet,
                             onPageClick = onPageClick,
                         )
-                        SettingsGroupDivider(isTablet = isTablet)
-                        SettingsPageRow(
-                            page = SettingsPage.TraktAuthentication,
-                            description = Res.string.compose_settings_root_tracking_description,
-                            isTablet = isTablet,
-                            onPageClick = onPageClick,
-                        )
+                        // Tracking (Trakt / Simkl) row removed: unused in this fork.
                     }
                     SettingsCategory.System -> {
                         SettingsPageRow(
